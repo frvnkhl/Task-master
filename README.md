@@ -1,2 +1,4 @@
-# Task-master
-My task management tool app
+# Task master
+## My app for managing tasks
+
+## Main features
