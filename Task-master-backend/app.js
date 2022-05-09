@@ -128,26 +128,26 @@ app.post('/tasks/new', (req, res) => {
 });
 
 //edit a specific task
-app.patch('/tasks/:id', (req, res) => {
-    const taskId = req.params.id;
-    const partsToUpdate = req.body;
+// app.patch('/tasks/:id', (req, res) => {
+//     const taskId = req.params.id;
+//     const partsToUpdate = req.body;
 
-    if (req.isAuthenticated()) {
-        const user = req.user;
+//     if (req.isAuthenticated()) {
+//         const user = req.user;
 
-        User.findById(req.user.id, (err) => {
-            if (!err) {
-                user.tasks.map(task => task._id === taskId && {...task, partsToUpdate});
-                user.save();
-                res.redirect('/tasks');
-            } else {
-                res.status(400).send(err);
-            }
-        });
-    } else {
-        res.redirect('/');
-    }
-});
+//         User.findByIdAndUpdate(user.id, { $addToSet { _tasks:  }}) , (err) => {
+//             if (!err) {
+//                 ;
+//                 user.save();
+//                 res.redirect('/tasks');
+//             } else {
+//                 res.status(400).send(err);
+//             }
+//         });
+//     } else {
+//         res.redirect('/');
+//     }
+// });
 
 //listen
 app.listen(port, () => {
