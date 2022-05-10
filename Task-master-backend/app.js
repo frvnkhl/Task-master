@@ -55,19 +55,23 @@ app.post('/register', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    if (User.exists({ email: userEmail } || { username: username })) {
-        res.status(409).send('User with this email or username already exists');
-    } else {
-        User.register({ email: userEmail, username: username }, password, (err, user) => {
-            if (err) {
-                res.status(400).send(err);
-            } else {
-                passport.authenticate('local')(req, res, () => {
-                    res.redirect('/tasks');
-                })
-            }
-        })
-    }
+    User.findOne({ email: userEmail } || { username: username }, (err, user) => {
+        if (user) {
+            res.status(409).send('User with this email or username already exists');
+        } else if (err) {
+            res.status(400).send(err);
+        } else {
+            User.register({ email: userEmail, username: username }, password, (err, user) => {
+                if (err) {
+                    res.status(400).send(err);
+                } else {
+                    passport.authenticate('local')(req, res, () => {
+                        res.redirect('/tasks');
+                    })
+                }
+            })
+        }
+    })
 });
 
 app.post('/login', (req, res) => {
@@ -128,26 +132,47 @@ app.post('/tasks/new', (req, res) => {
 });
 
 //edit a specific task
-// app.patch('/tasks/:id', (req, res) => {
-//     const taskId = req.params.id;
-//     const partsToUpdate = req.body;
+app.patch('/tasks/:id', (req, res) => {
+    const taskId = req.params.id;
+    const partsToUpdate = req.body;
+    Object.keys(partsToUpdate).forEach(key => {
+        const newKey = `tasks.$.${key}`;
+        partsToUpdate[newKey] = partsToUpdate[key];
+        delete partsToUpdate[key];
+    })
 
-//     if (req.isAuthenticated()) {
-//         const user = req.user;
+    if (req.isAuthenticated()) {
+        User.updateOne({ 'tasks._id': taskId }, { $set: partsToUpdate }, (err) => {
+            if (!err) {
+                res.status(200).redirect('/tasks');
+            } else {
+                res.status(400).send(err);
+            }
+        })
+    } else {
+        res.redirect('/');
+    }
+});
 
-//         User.findByIdAndUpdate(user.id, { $addToSet { _tasks:  }}) , (err) => {
-//             if (!err) {
-//                 ;
-//                 user.save();
-//                 res.redirect('/tasks');
-//             } else {
-//                 res.status(400).send(err);
-//             }
-//         });
-//     } else {
-//         res.redirect('/');
-//     }
-// });
+//delete a specific task
+app.delete('/tasks/:id', (req, res) => {
+    const taskId = req.params.id;
+    const user = req.user;
+
+    if (req.isAuthenticated()) {
+        try {
+            const taskToDelete = user.tasks.find(task => task._id === taskId);
+            const index = user.tasks.indexOf(taskToDelete);
+            user.tasks.splice(index, 1);
+            user.save();
+            res.status(200).redirect('/tasks');
+        } catch (err) {
+            res.status(400).send(err);
+        }
+    } else {
+        res.redirect('/');
+    }
+});
 
 //listen
 app.listen(port, () => {
