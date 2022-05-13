@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require("passport-local").Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const { Task } = require(__dirname + '/models/Task.js');
 const User = require(__dirname + '/models/User.js');
 
@@ -42,6 +44,31 @@ passport.deserializeUser((id, done) => {
         done(err, user);
     });
 });
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:6299/auth/google/task-master"
+},
+    (accessToken, refreshToken, profile, cb) => {
+        User.findOrCreate({
+            googleId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_")
+        }, (err, user) => {
+            return cb(err, user);
+        });
+    }
+));
+passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:6299/auth/facebook/callback",
+    profileFields: ['id', 'displayName', 'email']
+},
+    (accessToken, refreshToken, profile, cb) => {
+        User.findOrCreate({ facebookId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_") }, (err, user) => {
+            return cb(err, user);
+        });
+    }
+));
 
 //api endpoints
 app.get('/', (req, res) => {
@@ -90,6 +117,31 @@ app.post('/login', (req, res) => {
         }
     })
 })
+
+//google login/register
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/task-master',
+    passport.authenticate('google', { failureRedirect: '/' }),
+    (req, res) => {
+        // Successful authentication, redirect to secrets.
+        res.redirect('/tasks');
+    }
+);
+
+//facebook login/register
+app.get('/auth/facebook',
+    passport.authenticate('facebook', { scope: ['email'] }));
+
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/' }),
+    (req, res) => {
+        // Successful authentication, redirect home.
+        res.redirect('/tasks');
+    }
+);
 
 //task related endpoints
 //get all user's information including tasks
