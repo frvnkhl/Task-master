@@ -226,6 +226,12 @@ app.delete('/tasks/:id', (req, res) => {
     }
 });
 
+//log out
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+});
+
 //listen
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
