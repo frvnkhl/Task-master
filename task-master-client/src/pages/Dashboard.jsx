@@ -1,8 +1,8 @@
 import React from "react";
 
-const Dashboard = () => {
+const Dashboard = (props) => {
     return(
-        <div lassName="mx-10 my-5">
+        <div className="mx-10 my-5">
             <h1>Dashboard</h1>
         </div>
     )

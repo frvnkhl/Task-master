@@ -6,12 +6,16 @@ import { Button, ButtonGroup } from '@chakra-ui/react';
 import DataService from '../services/DataService';
 
 const Navbar = (props) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(props.isLoggedIn);
+
+    const handleLogout = () => {
+        DataService.logout();
+        window.location.reload();
+    }
 
     return (
         <div className="w-full bg-[#000000] h-2.5rem pt-3 columns-2">
             <img className="ml-5" src={logo} alt='Task Master logo'></img>
-            {isLoggedIn && <Button className="float-right mr-10 mt-7" colorScheme='gray' onClick={DataService.logout()}>Logout</Button>}
+            {props.isLoggedIn && <Button className="float-right mr-10 mt-7" colorScheme='gray' onClick={handleLogout}>Logout</Button>}
         </div>
     )
 };

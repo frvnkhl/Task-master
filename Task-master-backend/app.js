@@ -7,9 +7,10 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
-const { Task } = require(__dirname + '/models/Task.js');
+ const { Task } = require(__dirname + '/models/Task.js');
 const User = require(__dirname + '/models/User.js');
+const routes = require('./routes/routes');
+const userRoutes = require('./routes/userRoutes');
 
 //app config
 const app = express();
@@ -25,211 +26,23 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
 app.use((err, req, res, next) => {
     return res.json({ errorMessage: err.message });
 });
+app.use('/', routes);
+app.use('/user', userRoutes);
 
 //db config
 mongoose.connect(`mongodb+srv://${process.env.DB_ADMIN}:${process.env.DB_PASSWORD}@cluster0.bxjxi.mongodb.net/TaskMaster?retryWrites=true&w=majority`, { useNewUrlParser: true });
-
-
-//passport strategies
-passport.use(User.createStrategy());
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-        done(err, user);
-    });
-});
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:6299/auth/google/task-master"
-},
-    (accessToken, refreshToken, profile, cb) => {
-        User.findOrCreate({
-            googleId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_")
-        }, (err, user) => {
-            return cb(err, user);
-        });
-    }
-));
-passport.use(new FacebookStrategy({
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:6299/auth/facebook/callback",
-    profileFields: ['id', 'displayName', 'email']
-},
-    (accessToken, refreshToken, profile, cb) => {
-        User.findOrCreate({ facebookId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_") }, (err, user) => {
-            return cb(err, user);
-        });
-    }
-));
 
 //api endpoints
 app.get('/', (req, res) => {
     const Users = User.find({});
     res.status(200).send("home");
-});
-
-//login & register endpoints 
-app.post('/register', (req, res) => {
-    const userEmail = req.body.email;
-    const username = req.body.username;
-    const password = req.body.password;
-
-    User.findOne({ email: userEmail } || { username: username }, (err, user) => {
-        if (user) {
-            res.status(409).send('User with this email or username already exists');
-        } else if (err) {
-            res.status(400).send(err);
-        } else {
-            User.register({ email: userEmail, username: username }, password, (err, user) => {
-                if (err) {
-                    res.status(400).send(err);
-                } else {
-                    passport.authenticate('local')(req, res, () => {
-                        res.redirect('/tasks');
-                    })
-                }
-            })
-        }
-    })
-});
-
-app.post('/login', (req, res) => {
-    const user = new User({
-        username: req.body.username,
-        password: req.body.password
-    });
-
-    req.login(user, (err) => {
-        if (err) {
-            res.status(400).send(err);
-        } else {
-            passport.authenticate('local')(req, res, () => {
-                res.status(200).redirect('/tasks');
-            })
-        }
-    })
-})
-
-//google login/register
-app.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-app.get('/auth/google/task-master',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    (req, res) => {
-        // Successful authentication, redirect to secrets.
-        res.redirect('/tasks');
-    }
-);
-
-//facebook login/register
-app.get('/auth/facebook',
-    passport.authenticate('facebook', { scope: ['email'] }));
-
-app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/' }),
-    (req, res) => {
-        // Successful authentication, redirect home.
-        res.redirect('/tasks');
-    }
-);
-
-//task related endpoints
-//get all user's information including tasks
-app.get('/tasks', (req, res) => {
-    if (req.isAuthenticated()) {
-        const user = req.user;
-        res.status(200).send(user);
-    } else {
-        res.status(401).redirect('/');
-    }
-});
-
-//create a task
-app.post('/tasks/new', (req, res) => {
-    if (req.isAuthenticated()) {
-        const user = req.user;
-        const taskDescription = req.body.description;
-        const status = req.body.status;
-        const urgency = req.body.urgency;
-        const dueDate = req.body.dueDate;
-
-        try {
-            const newTask = new Task({
-                description: taskDescription,
-                status: status,
-                urgency: urgency,
-                dueDate: dueDate
-            });
-
-            user.tasks.push(newTask);
-            user.save();
-            res.redirect('/tasks');
-        } catch (err) {
-            res.status(400).send(err);
-        }
-
-    } else {
-        res.redirect('/');
-    }
-});
-
-//edit a specific task
-app.patch('/tasks/:id', (req, res) => {
-    const taskId = req.params.id;
-    const partsToUpdate = req.body;
-    Object.keys(partsToUpdate).forEach(key => {
-        const newKey = `tasks.$.${key}`;
-        partsToUpdate[newKey] = partsToUpdate[key];
-        delete partsToUpdate[key];
-    })
-
-    if (req.isAuthenticated()) {
-        User.updateOne({ 'tasks._id': taskId }, { $set: partsToUpdate }, (err) => {
-            if (!err) {
-                res.status(200).redirect('/tasks');
-            } else {
-                res.status(400).send(err);
-            }
-        })
-    } else {
-        res.redirect('/');
-    }
-});
-
-//delete a specific task
-app.delete('/tasks/:id', (req, res) => {
-    const taskId = req.params.id;
-    const user = req.user;
-
-    if (req.isAuthenticated()) {
-        try {
-            const taskToDelete = user.tasks.find(task => task._id === taskId);
-            const index = user.tasks.indexOf(taskToDelete);
-            user.tasks.splice(index, 1);
-            user.save();
-            res.status(200).redirect('/tasks');
-        } catch (err) {
-            res.status(400).send(err);
-        }
-    } else {
-        res.redirect('/');
-    }
-});
-
-//log out
-app.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
 });
 
 //listen
