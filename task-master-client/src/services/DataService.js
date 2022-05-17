@@ -21,8 +21,10 @@ const loginUser = async (userData) => {
 const googleLogin = async () => {
     return await server.get('/auth/google', { withCredentials: true }).then(res => {
         console.log(res.data);
-        if (res.data.username) {
-            localStorage.setItem('user', JSON.stringify(res.data));
+        try {
+            localStorage.setItem('JWT', res.data.token);
+        } catch (err) {
+            console.error(err);
         }
         return res.data;
     });
@@ -31,8 +33,10 @@ const googleLogin = async () => {
 const facebookLogin = async () => {
     return await server.get('/auth/facebook', { withCredentials: true }).then(res => {
         console.log(res.data);
-        if (res.data.username) {
-            localStorage.setItem('user', JSON.stringify(res.data));
+        try {
+            localStorage.setItem('JWT', res.data.token);
+        } catch (err) {
+            console.error(err);
         }
         return res.data;
     });

@@ -5,10 +5,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
-const LocalStrategy = require("passport-local").Strategy;
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
- const { Task } = require(__dirname + '/models/Task.js');
-const User = require(__dirname + '/models/User.js');
 const routes = require('./routes/routes');
 const userRoutes = require('./routes/userRoutes');
 
@@ -23,13 +19,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL,
+    methods: 'GET, POST, PATCH, DELETE'
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
-app.use(cors({
-    credentials: true,
-    origin: true
-}));
 app.use((err, req, res, next) => {
     return res.json({ errorMessage: err.message });
 });

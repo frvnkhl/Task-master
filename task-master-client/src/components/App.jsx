@@ -24,12 +24,14 @@ const App = () => {
         componentWillMount()
     }, [])
 
-
+    const reload = () => {
+        window.location.reload();
+    }
 
     return (
         <div className="">
             <Navbar isLoggedIn={isLoggedIn} />
-            {isLoggedIn ? <Dashboard isLoggedIn={isLoggedIn} user={user} changeLoginStatus={setIsLoggedIn} /> : <Home isLoggedIn={isLoggedIn} changeLoginStatus={setIsLoggedIn} />}
+            {isLoggedIn ? <Dashboard isLoggedIn={isLoggedIn} user={user} changeLoginStatus={setIsLoggedIn} /> : <Home isLoggedIn={isLoggedIn} refresh={reload} />}
         </div>
     )
 }

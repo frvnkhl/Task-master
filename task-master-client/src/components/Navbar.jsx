@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import NoPage from '../pages/NoPage';
+import React from "react";
 import logo from '../images/task-master-logo.png';
-import { Button, ButtonGroup } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import DataService from '../services/DataService';
 
 const Navbar = (props) => {

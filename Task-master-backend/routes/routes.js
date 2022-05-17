@@ -67,20 +67,6 @@ router.post('/login', (req, res, next) => {
             });
         }
     })(req, res, next);
-    // const user = new User({
-    //     username: req.body.username,
-    //     password: req.body.password
-    // });
-
-    // req.login(user, (err) => {
-    //     if (err) {
-    //         res.status(400).send(err);
-    //     } else {
-    //         passport.authenticate('bearer', { session: false })(req, res, () => {
-    //             res.status(200).json(user);
-    //         })
-    //     }
-    // })
 })
 
 //google login/register
@@ -89,9 +75,8 @@ router.get('/auth/google',
 );
 
 router.get('/auth/google/task-master',
-    passport.authenticate('google', { session: false, failureRedirect: '/' }),
+    passport.authenticate('google', { session: false, successRedirect: process.env.CLIENT_URL, failureRedirect: process.env.CLIENT_URL }),
     (req, res) => {
-        // Successful authentication, redirect to secrets.
         const token = jwt.sign({ id: req.user._id }, jwtSecret.secret, {
             expiresIn: 60 * 60,
         });
