@@ -41,6 +41,15 @@ const LoginForm = (props) => {
         });
     }
 
+    const handleGoogleLogin = async () => {
+        window.open('http://localhost:6299/auth/google', '_self');
+    }
+
+    const handleFacebookLogin = async () => {
+        window.open('http://localhost:6299/auth/facebook', '_self');
+    }
+
+
     return (
         <div className="px-5 py-3 shadow-lg">
             <h2 className="text-2xl font-medium">Login with your credentials</h2>
@@ -60,8 +69,8 @@ const LoginForm = (props) => {
             <h2 className="text-2xl font-medium my-3">Or login with your socials!</h2>
             <div className="grid-rows-1">
                 <div>
-                    <Button className="my-5 mr-5" colorScheme='blue'><FontAwesomeIcon className="mr-2" icon={faGoogle} />Login with Google</Button>
-                    <Button className="my-5" colorScheme='facebook'><FontAwesomeIcon className="mr-2" icon={faFacebook} />Login with Facebook</Button>
+                    <Button className="my-5 mr-5" colorScheme='blue' onClick={handleGoogleLogin}><FontAwesomeIcon className="mr-2" icon={faGoogle} />Login with Google</Button>
+                    <Button className="my-5" colorScheme='facebook' onClick={handleFacebookLogin}><FontAwesomeIcon className="mr-2" icon={faFacebook} />Login with Facebook</Button>
                 </div>
             </div>
         </div>

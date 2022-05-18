@@ -106,7 +106,7 @@ passport.use(new GoogleStrategy({
 },
     (accessToken, refreshToken, profile, cb) => {
         User.findOrCreate({
-            googleId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_"), token: accessToken
+            googleId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_")
         }, (err, user) => {
             return cb(err, user);
         });
@@ -121,7 +121,7 @@ passport.use(new FacebookStrategy({
 },
     (accessToken, refreshToken, profile, cb) => {
         User.findOrCreate({
-            facebookId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_"), token: accessToken
+            facebookId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_")
         }, (err, user) => {
             return cb(err, user);
         });

@@ -75,16 +75,12 @@ router.get('/auth/google',
 );
 
 router.get('/auth/google/task-master',
-    passport.authenticate('google', { session: false, successRedirect: process.env.CLIENT_URL, failureRedirect: process.env.CLIENT_URL }),
+    passport.authenticate('google', { session: false, failureRedirect: process.env.CLIENT_URL }),
     (req, res) => {
-        const token = jwt.sign({ id: req.user._id }, jwtSecret.secret, {
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
             expiresIn: 60 * 60,
         });
-        res.status(200).send({
-            auth: true,
-            token,
-            message: 'user found & logged in',
-        });
+        res.status(200).redirect(`${process.env.CLIENT_URL}?token=${token}`);
     }
 );
 
@@ -95,15 +91,10 @@ router.get('/auth/facebook',
 router.get('/auth/facebook/callback',
     passport.authenticate('facebook', { failureRedirect: '/' }),
     (req, res) => {
-        // Successful authentication, redirect home.
-        const token = jwt.sign({ id: req.user._id }, jwtSecret.secret, {
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
             expiresIn: 60 * 60,
         });
-        res.status(200).send({
-            auth: true,
-            token,
-            message: 'user found & logged in',
-        });
+        res.status(200).redirect(`${process.env.CLIENT_URL}?token=${token}`);
     }
 );
 

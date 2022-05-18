@@ -1,5 +1,4 @@
 import server from "../axios";
-import authHeader from "./authHeader";
 
 const registerUser = async (userData) => {
     return await server.post('/register', userData, { withCredentials: true });
@@ -14,30 +13,6 @@ const loginUser = async (userData) => {
             console.error(err);
         }
 
-        return res.data;
-    });
-};
-
-const googleLogin = async () => {
-    return await server.get('/auth/google', { withCredentials: true }).then(res => {
-        console.log(res.data);
-        try {
-            localStorage.setItem('JWT', res.data.token);
-        } catch (err) {
-            console.error(err);
-        }
-        return res.data;
-    });
-};
-
-const facebookLogin = async () => {
-    return await server.get('/auth/facebook', { withCredentials: true }).then(res => {
-        console.log(res.data);
-        try {
-            localStorage.setItem('JWT', res.data.token);
-        } catch (err) {
-            console.error(err);
-        }
         return res.data;
     });
 };
@@ -70,8 +45,6 @@ const logout = async () => {
 const DataService = {
     registerUser,
     loginUser,
-    googleLogin,
-    facebookLogin,
     getAllTasks,
     createNewTask,
     editTask,

@@ -48,19 +48,11 @@ const RegisterForm = () => {
     };
 
     const handleGoogleSignUp = async () => {
-        await window.open('http://localhost:6299/auth/google', '_self').then(res => {
-            setMessage({
-                message: res.data.message,
-                colour: 'forestGreen'
-            });
-        }).catch(err => {
-            // console.log(err);
-            setMessage({
-                message: err.response.data,
-                colour: 'tomato'
-            })
-        })
+        window.open('http://localhost:6299/auth/google', '_self');
+    }
 
+    const handleFacebookSignUp = async () => {
+        window.open('http://localhost:6299/auth/facebook', '_self');
     }
 
     return (
@@ -83,7 +75,7 @@ const RegisterForm = () => {
             <div className="grid-rows-1">
                 <div>
                     <Button className="my-5 mr-5" colorScheme='blue' onClick={handleGoogleSignUp}><FontAwesomeIcon className="mr-2" icon={faGoogle} />Sign up with Google</Button>
-                    <Button className="my-5" colorScheme='facebook'><FontAwesomeIcon className="mr-2" icon={faFacebook} />Sign up with Facebook</Button>
+                    <Button className="my-5" colorScheme='facebook' onClick={handleFacebookSignUp}><FontAwesomeIcon className="mr-2" icon={faFacebook} />Sign up with Facebook</Button>
                 </div>
             </div>
         </div>
