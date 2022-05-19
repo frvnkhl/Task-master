@@ -6,6 +6,7 @@ import Home from '../pages/Home';
 import DataService from "../services/DataService";
 import queryString from 'query-string';
 import { useLocation, useNavigate } from 'react-router';
+import jwt_decode from 'jwt-decode';
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState();
@@ -13,6 +14,7 @@ const App = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    //Check the JWT token for authorisation
     useEffect(() => {
         const componentWillMount = () => {
             const value = queryString.parse(location.search);
@@ -22,7 +24,7 @@ const App = () => {
                 navigate('/');
             }
             let accessToken = localStorage.getItem('JWT');
-            if (accessToken === null) {
+            if (accessToken === null || !isTokenValid(accessToken)) {
                 setIsLoggedIn(false);
             } else {
                 setIsLoggedIn(true);
@@ -34,6 +36,15 @@ const App = () => {
         componentWillMount()
     }, )
 
+    //Check validity of JWT
+    const isTokenValid = (token) => {
+        const currentDate = new Date();
+        const decodedToken = jwt_decode(token);
+
+        return decodedToken.exp * 1000 > currentDate.getTime();
+    }
+
+    //Reload the app
     const reload = () => {
         window.location.reload();
     }
@@ -41,7 +52,7 @@ const App = () => {
     return (
         <div className="">
             <Navbar isLoggedIn={isLoggedIn} />
-            {isLoggedIn ? <Dashboard isLoggedIn={isLoggedIn} user={user} changeLoginStatus={setIsLoggedIn} /> : <Home isLoggedIn={isLoggedIn} refresh={reload} />}
+            {isLoggedIn ? <Dashboard isLoggedIn={isLoggedIn} refresh={reload} user={user} changeLoginStatus={setIsLoggedIn} /> : <Home isLoggedIn={isLoggedIn} refresh={reload} />}
         </div>
     )
 }
