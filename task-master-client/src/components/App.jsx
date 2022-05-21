@@ -18,7 +18,6 @@ const App = () => {
     useEffect(() => {
         const componentWillMount = () => {
             const value = queryString.parse(location.search);
-            console.log(value);
             if (value.token) {
                 localStorage.setItem('JWT', value.token);
                 navigate('/');

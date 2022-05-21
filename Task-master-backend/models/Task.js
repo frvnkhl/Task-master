@@ -4,7 +4,7 @@ const taskSchema = mongoose.Schema({
     description: String,
     status: {
         type: String,
-        enum: ['new', 'in progress', 'complete', 'canceled'],
+        enum: ['new', 'in progress', 'completed', 'canceled'],
         default: 'new'
     },
     urgency: {

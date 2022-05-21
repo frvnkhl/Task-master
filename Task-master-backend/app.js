@@ -36,12 +36,6 @@ app.use('/user', userRoutes);
 //db config
 mongoose.connect(`mongodb+srv://${process.env.DB_ADMIN}:${process.env.DB_PASSWORD}@cluster0.bxjxi.mongodb.net/TaskMaster?retryWrites=true&w=majority`, { useNewUrlParser: true });
 
-//api endpoints
-app.get('/', (req, res) => {
-    const Users = User.find({});
-    res.status(200).send("home");
-});
-
 //listen
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);

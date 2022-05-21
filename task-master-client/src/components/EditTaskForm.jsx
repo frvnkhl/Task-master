@@ -1,30 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-    Button,
     Modal,
     ModalOverlay,
     ModalContent,
     ModalHeader,
     ModalCloseButton,
     useDisclosure,
+    IconButton,
 } from '@chakra-ui/react';
-import { AddIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 import TaskForm from "./TaskForm";
 
-const NewTaskForm = (props) => {
+const EditTaskForm = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const task = useState({
-        description: String,
-        status: String,
-        urgency: Number,
-        dueDate: Date
-    });
+    const task = props.task;
 
 
     return (
         <div>
-            <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen} className='my-3'>New task</Button>
-
+            <IconButton colorScheme='teal' size='md' icon={<EditIcon />} className="mt-4 mr-4 float-right" onClick={onOpen}></IconButton>
             <Modal isOpen={isOpen} onClose={onClose} size='xl'>
                 <ModalOverlay />
                 <ModalContent>
@@ -32,15 +26,14 @@ const NewTaskForm = (props) => {
                         <AlertIcon />
                         {props.message.text}
                     </Alert>} */}
-                   
-                    <ModalHeader>Add your new task
-                    </ModalHeader>
+
+                    <ModalHeader>Edit your task</ModalHeader>
                     <ModalCloseButton />
-                    <TaskForm task={task} onClose={onClose} onSubmit={props.onAdd} isEdit={false}/>
+                    <TaskForm task={task} onClose={onClose} onSubmit={props.onEdit} isEdit={true} />
                 </ModalContent>
             </Modal>
         </div>
     )
 }
 
-export default NewTaskForm;
+export default EditTaskForm;

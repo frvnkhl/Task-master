@@ -104,7 +104,6 @@ router.delete('/tasks/:id', (req, res, next) => {
             res.send(info.message);
         } else {
             const taskId = req.params.id;
-            const user = req.user;
 
             try {
                 const taskToDelete = user.tasks.find(task => task._id === taskId);

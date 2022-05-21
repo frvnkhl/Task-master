@@ -21,7 +21,7 @@ const TaskStats = (props) => {
                 </Stat>
                 <Stat>
                     <StatLabel>Overdue tasks</StatLabel>
-                    <StatNumber>{props.tasks.filter(task => (task.status === 'new' || task.status === 'in progress') && task.dueDate < new Date()).length}</StatNumber>
+                    <StatNumber>{props.tasks.filter(task => (task.status === 'new' || task.status === 'in progress') && task.dueDate < new Date().toISOString()).length}</StatNumber>
                 </Stat>
             </StatGroup>
         </div>
