@@ -6,6 +6,7 @@ import NewTaskForm from "../components/NewTaskForm";
 import TaskStats from "../components/TaskStats";
 import ListView from "../components/task-views/ListView";
 import CalendarView from "../components/task-views/CalendarView";
+import KanbanView from "../components/task-views/KanbanView";
 
 const Dashboard = (props) => {
     const [view, setView] = useState('calendar');
@@ -88,8 +89,10 @@ const Dashboard = (props) => {
     const renderView = () => {
         if (view === 'list') {
             return (<ListView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
-        } else {
+        } else if (view === 'calendar') {
             return (<CalendarView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
+        } else {
+            return (<KanbanView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
         }
     }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridWeek from '@fullcalendar/timegrid';
-import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
+import interactionPlugin from "@fullcalendar/interaction";
 import {
     Modal,
     ModalOverlay,
@@ -11,7 +11,6 @@ import {
     ModalBody,
     ModalFooter,
     ModalCloseButton,
-    Button,
     useDisclosure,
     IconButton
 } from "@chakra-ui/react";
@@ -109,7 +108,6 @@ const CalendarView = (props) => {
                     events={calendarEvents}
                     eventClick={showTaskDetails}
                     eventDrop={handleChange}
-                    themeName='Minty'
                 />
             </div>
             <Modal isOpen={isInfoOpen} onClose={onInfoClose}>
