@@ -31,7 +31,7 @@ const ListView = (props) => {
             default:
                 break;
         }
-    });
+    }, [order, props.tasks]);
 
     const handleChange = (event) => {
         setOrder(event.target.value);
@@ -40,7 +40,7 @@ const ListView = (props) => {
     return (
         <div>
             <div className="w-1/5 float-right my-5">
-            <Text fontSize='sm' className="mb-2">Order by</Text>
+                <Text fontSize='sm' className="mb-2">Order by</Text>
                 <Select variant='flushed' focusBorderColor="teal" size='sm' value={order} onChange={handleChange}>
                     <option value='default'>Default</option>
                     <option value='urgency-1'>Urgency (low - high)</option>

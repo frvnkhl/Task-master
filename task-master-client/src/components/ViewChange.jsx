@@ -38,7 +38,7 @@ const ViewChange = (props) => {
                     <DrawerCloseButton />
                     <DrawerHeader>Change your tasks view</DrawerHeader>
                     <DrawerBody>
-                        <Select variant='flushed' colorScheme='teal' placeholder='Select your desired view' onChange={handleChange}>
+                        <Select variant='flushed' colorScheme='teal' placeholder='Select your desired view' onChange={handleChange} value={props.view}>
                             <option value='list'>List</option>
                             <option value='kanban'>Kanban</option>
                             <option value='calendar'>Calendar</option>

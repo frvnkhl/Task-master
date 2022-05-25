@@ -5,9 +5,10 @@ import { Divider, Text, Heading } from '@chakra-ui/react';
 import NewTaskForm from "../components/NewTaskForm";
 import TaskStats from "../components/TaskStats";
 import ListView from "../components/task-views/ListView";
+import CalendarView from "../components/task-views/CalendarView";
 
 const Dashboard = (props) => {
-    const [view, setView] = useState('list');
+    const [view, setView] = useState('calendar');
     const [user, setUser] = useState({
         username: String,
         email: String,
@@ -84,6 +85,14 @@ const Dashboard = (props) => {
         });
     };
 
+    const renderView = () => {
+        if (view === 'list') {
+            return (<ListView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
+        } else {
+            return (<CalendarView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
+        }
+    }
+
     return (
         <div className="mx-10 my-5">
             <Heading as='h1' size='xl' className="text-center md:mt-10 md:mb-5 sm:m-3">Dashboard of {user.username}</Heading>
@@ -101,7 +110,10 @@ const Dashboard = (props) => {
             <div className="w-full">
                 {user.tasks.length === 0 ?
                     <Text fontSize='4xl' className="text-center my-10">No tasks to show. Add some tasks!</Text> :
-                    <ListView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh}/>}
+                    <div>
+                        {renderView()}
+                    </div>
+                    }
             </div>
         </div>
     )

@@ -68,7 +68,9 @@ const TaskBox = (props) => {
             </div>
             <div className="flex flex-col w-[5%] justify-between">
                 <EditTaskForm task={props.task} onEdit={props.onEdit} />
-                <IconButton colorScheme='red' size='md' icon={<DeleteIcon />} className="mb-1 mr-4 float-right" onClick={handleDelete}></IconButton>
+                <div>
+                    <IconButton colorScheme='red' size='md' icon={<DeleteIcon />} className="mb-1 mr-4 float-right" onClick={handleDelete}></IconButton>
+                </div>
             </div>
         </Box>
     )
