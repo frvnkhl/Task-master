@@ -104,7 +104,7 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:6299/auth/google/task-master",
     proxy: true
 },
-    (accessToken, refreshToken, profile, cb) => {
+    (_accessToken, _refreshToken, profile, cb) => {
         User.findOrCreate({
             googleId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_")
         }, (err, user) => {
@@ -119,7 +119,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'email'],
     proxy: true
 },
-    (accessToken, refreshToken, profile, cb) => {
+    (_accessToken, _refreshToken, profile, cb) => {
         User.findOrCreate({
             facebookId: profile.id, email: profile.emails[0].value, username: (profile.displayName + profile.id.substring(0, 5)).replace(/ /g, "_")
         }, (err, user) => {

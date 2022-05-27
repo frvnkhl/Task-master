@@ -9,7 +9,9 @@ import CalendarView from "../components/task-views/CalendarView";
 import KanbanView from "../components/task-views/KanbanView";
 
 const Dashboard = (props) => {
-    const [view, setView] = useState('calendar');
+    const [view, setView] = useState(() => {
+        return localStorage.getItem('view') !== null ? localStorage.getItem('view') : 'list';
+    });
     const [user, setUser] = useState({
         username: String,
         email: String,

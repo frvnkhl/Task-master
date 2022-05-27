@@ -20,6 +20,7 @@ const ViewChange = (props) => {
 
     const handleChange = (event) => {
         props.changeView(event.target.value);
+        localStorage.setItem('view', event.target.value);
     }
 
     return(

@@ -17,6 +17,7 @@ const App = () => {
     //Check the JWT token for authorisation
     useEffect(() => {
         const componentWillMount = () => {
+            //Check if token was passed from 3rd party login
             const value = queryString.parse(location.search);
             if (value.token) {
                 localStorage.setItem('JWT', value.token);
@@ -49,7 +50,7 @@ const App = () => {
     }
 
     return (
-        <div className="">
+        <div>
             <Navbar isLoggedIn={isLoggedIn} />
             {isLoggedIn ? <Dashboard isLoggedIn={isLoggedIn} refresh={reload} user={user} changeLoginStatus={setIsLoggedIn} /> : <Home isLoggedIn={isLoggedIn} refresh={reload} />}
         </div>

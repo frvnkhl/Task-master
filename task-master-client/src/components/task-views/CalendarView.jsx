@@ -3,26 +3,13 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridWeek from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalCloseButton,
-    useDisclosure,
-    IconButton
-} from "@chakra-ui/react";
-import TaskForm from "../TaskForm";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { useDisclosure } from "@chakra-ui/react";
+import TaskDetails from "../TaskDetails";
 
 const CalendarView = (props) => {
     const [calendarEvents, setCalendarEvents] = useState([]);
-    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
-    const { isOpen: isInfoOpen, onOpen: onInfoOpen, onClose: onInfoClose } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedTask, setSelectedTask] = useState('');
-    const taskUrgencyArr = ['non urgent', 'low', 'normal', 'important', 'critical'];
 
     useEffect(() => {
         const mappedEvents = [];
@@ -42,7 +29,7 @@ const CalendarView = (props) => {
             })
         })
         setCalendarEvents(mappedEvents);
-       
+
     }, [props.tasks]);
 
     const setBackgroundColour = (status) => {
@@ -61,14 +48,10 @@ const CalendarView = (props) => {
     }
 
     const showTaskDetails = (eventClick) => {
-        onInfoOpen();
+        onOpen();
         const requestedTask = props.tasks.filter(task => task._id === eventClick.event.id);
         setSelectedTask(requestedTask);
         console.log(requestedTask);
-    }
-
-    const handleDelete = () => {
-        props.onDelete(selectedTask.id);
     }
 
     const handleChange = (eventClick) => {
@@ -79,16 +62,6 @@ const CalendarView = (props) => {
 
         props.onEdit(taskNewDate, taskId);
     }
-
-    const formatDate = (date) => {
-        return new Date(date).toLocaleDateString('en-GB', {
-            weekday: "long",
-            day: 'numeric',
-            month: "long",
-            year: "numeric",
-        });
-    }
-
 
     return (
         <div className="m-5">
@@ -110,45 +83,13 @@ const CalendarView = (props) => {
                     eventDrop={handleChange}
                 />
             </div>
-            <Modal isOpen={isInfoOpen} onClose={onInfoClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Task details</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        {
-                            selectedTask !== '' &&
-                            <div className="flex flex-col text-justify">
-                                <div><b>Task:</b> {selectedTask[0].description}</div>
-                                <div><b>Urgency:</b> {taskUrgencyArr[(selectedTask[0].urgency) - 1]}</div>
-                                <div><b>Status:</b> {selectedTask[0].status}</div>
-                                <div><b>Due date:</b> {formatDate(selectedTask[0].dueDate)}</div>
-                            </div>
-                        }
-                    </ModalBody>
-                    <ModalFooter>
-                        {/* <Button colorScheme='purple' mr={3} onClick={onInfoClose}>
-                            Close
-                        </Button> */}
-                        <IconButton colorScheme='red' mr={3} onClick={handleDelete} icon={<DeleteIcon />}>
-                            Delete task
-                        </IconButton>
-                        <IconButton colorScheme='teal' onClick={onEditOpen} icon={<EditIcon />}>Edit task</IconButton>
-                        {
-                            selectedTask !== '' &&
-                            <Modal isOpen={isEditOpen} onClose={onEditClose} size='xl'>
-                                <ModalOverlay />
-                                <ModalContent>
-                                    <ModalHeader>Edit your task</ModalHeader>
-                                    <ModalCloseButton />
-                                    <TaskForm task={selectedTask[0]} onClose={onEditClose} onSubmit={props.onEdit} isEdit={true} />
-                                </ModalContent>
-                            </Modal>
-                        }
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-
+            <TaskDetails isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
+                task={selectedTask}
+                onDelete={props.onDelete}
+                onEdit={props.onEdit}
+            />
         </div>
     )
 };
