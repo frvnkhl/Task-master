@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const server = axios.create({
-    baseURL: "http://localhost:6299/",
+    baseURL: "https://task-master-server.herokuapp.com/",
 });
 
 export default server;
