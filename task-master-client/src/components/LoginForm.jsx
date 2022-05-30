@@ -9,12 +9,12 @@ const LoginForm = (props) => {
         username: '',
         password: ''
     });
-
     const [message, setMessage] = useState({
         message: String,
         colour: String
     });
 
+    //Manage change in the input values of the form
     const handleChange = (event) => {
         const { name, value } = event.target;
 
@@ -23,6 +23,7 @@ const LoginForm = (props) => {
         })
     };
 
+    //Handle login of the user via username & password
     const handleUserSubmit = async (event) => {
         event.preventDefault();
         DataService.loginUser(login).then(res => {
@@ -41,14 +42,15 @@ const LoginForm = (props) => {
         });
     }
 
+    //Handle login via Google
     const handleGoogleLogin = async () => {
         window.open('http://localhost:6299/auth/google', '_self');
     }
 
+    //Handle login via Facebook
     const handleFacebookLogin = async () => {
         window.open('http://localhost:6299/auth/facebook', '_self');
     }
-
 
     return (
         <div className="px-5 py-3 shadow-lg">

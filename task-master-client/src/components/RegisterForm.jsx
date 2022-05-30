@@ -15,8 +15,7 @@ const RegisterForm = () => {
         colour: String
     });
 
-
-
+    //handle change in the inputs on the form
     const handleChange = (event) => {
         const { name, value } = event.target;
 
@@ -25,6 +24,7 @@ const RegisterForm = () => {
         })
     };
 
+    //handle registering of the user via username & password
     const handleUserSubmit = async (event) => {
         event.preventDefault();
         DataService.registerUser(register).then(res => {
@@ -47,10 +47,12 @@ const RegisterForm = () => {
         })
     };
 
+    //handle Google register
     const handleGoogleSignUp = async () => {
         window.open('http://localhost:6299/auth/google', '_self');
     }
 
+    //handle Facebook register
     const handleFacebookSignUp = async () => {
         window.open('http://localhost:6299/auth/facebook', '_self');
     }

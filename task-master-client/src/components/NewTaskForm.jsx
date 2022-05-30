@@ -20,23 +20,17 @@ const NewTaskForm = (props) => {
         dueDate: Date
     });
 
-
     return (
         <div>
-            <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen} className='my-3'>New task</Button>
+            <Button width='95%' leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen} className='my-3'>New task</Button>
 
             <Modal isOpen={isOpen} onClose={onClose} size='xl'>
                 <ModalOverlay />
                 <ModalContent>
-                    {/* {props.message.text !== '' && <Alert status={props.message.status}>
-                        <AlertIcon />
-                        {props.message.text}
-                    </Alert>} */}
-                   
                     <ModalHeader>Add your new task
                     </ModalHeader>
                     <ModalCloseButton />
-                    <TaskForm task={task} onClose={onClose} onSubmit={props.onAdd} isEdit={false}/>
+                    <TaskForm task={task} onClose={onClose} onSubmit={props.onAdd} isEdit={false} />
                 </ModalContent>
             </Modal>
         </div>

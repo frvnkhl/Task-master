@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TaskBox from "../TaskBox";
 import { Text, Select } from '@chakra-ui/react'
 
@@ -6,7 +6,8 @@ const ListView = (props) => {
     const [tasks, setTasks] = useState(props.tasks);
     const [order, setOrder] = useState('default');
 
-    useEffect(() => {
+    //sets the order of the tasks listed
+    const handleTaskOrder = useCallback(() => {
         switch (order) {
             case 'default':
                 setTasks(props.tasks);
@@ -31,15 +32,21 @@ const ListView = (props) => {
             default:
                 break;
         }
-    }, [order, props.tasks]);
+    }, [props.tasks, order])
 
+    //apply order on 1st render
+    useEffect(() => {
+        handleTaskOrder();
+    }, [handleTaskOrder]);
+
+    //manage a change of the view
     const handleChange = (event) => {
         setOrder(event.target.value);
     }
 
     return (
         <div>
-            <div className="w-1/5 float-right my-5">
+            <div className="md:w-1/5 sm:w-3/5 float-right my-5">
                 <Text fontSize='sm' className="mb-2">Order by</Text>
                 <Select variant='flushed' focusBorderColor="teal" size='sm' value={order} onChange={handleChange}>
                     <option value='default'>Default</option>

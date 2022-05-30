@@ -6,6 +6,7 @@ import EditTaskForm from "./EditTaskForm";
 const TaskBox = (props) => {
     const { description, status, urgency, dueDate } = props.task;
 
+    //Returns urgency level badge
     const urgencyStatus = (level) => {
         switch (level) {
             case 1:
@@ -23,6 +24,7 @@ const TaskBox = (props) => {
         }
     }
 
+    //Returns colour of the status badge
     const taskStatus = (status) => {
         switch (status) {
             case 'new':
@@ -38,10 +40,12 @@ const TaskBox = (props) => {
         }
     }
 
+    //Returns date badge colour based on whether the due date already passed
     const taskDate = (dueDate) => {
         return dueDate < new Date().toISOString() ? 'red' : 'cyan';
     }
 
+    //Formats date into a user-friendly format
     const formatDate = (date) => {
         return new Date(date).toLocaleDateString('en-GB', {
             weekday: "short",
@@ -51,8 +55,9 @@ const TaskBox = (props) => {
         });
     }
 
+    //Handles deletion of the task
     const handleDelete = () => {
-        console.log({task: props.task});
+        console.log({ task: props.task });
         props.onDelete(props.task._id);
     }
 
@@ -69,7 +74,7 @@ const TaskBox = (props) => {
             <div className="flex flex-col w-[5%] justify-between">
                 <EditTaskForm task={props.task} onEdit={props.onEdit} />
                 <div>
-                    <IconButton colorScheme='red' size='md' icon={<DeleteIcon />} className="mb-1 mr-4 float-right" onClick={handleDelete}></IconButton>
+                    <IconButton colorScheme='red' size='md' icon={<DeleteIcon />} className="mb-1 mr-2 float-right" onClick={handleDelete}></IconButton>
                 </div>
             </div>
         </Box>

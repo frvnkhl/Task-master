@@ -30,6 +30,8 @@ app.use(express.json());
 app.use((err, req, res, next) => {
     return res.json({ errorMessage: err.message });
 });
+
+//routes
 app.use('/', routes);
 app.use('/user', userRoutes);
 

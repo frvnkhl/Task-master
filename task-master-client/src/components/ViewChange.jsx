@@ -18,14 +18,15 @@ const ViewChange = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
 
+    //Handles change on the input fields
     const handleChange = (event) => {
         props.changeView(event.target.value);
         localStorage.setItem('view', event.target.value);
     }
 
-    return(
+    return (
         <div>
-            <Button leftIcon={<ViewIcon />} ref={btnRef} className='my-3 mx-auto' colorScheme='teal'  onClick={onOpen}>
+            <Button width='95%' leftIcon={<ViewIcon />} ref={btnRef} className='my-3 mx-auto' colorScheme='teal' onClick={onOpen}>
                 Change view
             </Button>
             <Drawer
@@ -55,7 +56,7 @@ const ViewChange = (props) => {
                 </DrawerContent>
             </Drawer>
         </div>
-        
+
     )
 }
 

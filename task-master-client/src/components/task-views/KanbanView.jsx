@@ -4,11 +4,13 @@ import TaskDetails from '../TaskDetails';
 import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 
 const KanbanView = (props) => {
-    const [taskData, setTaskData] = useState();
+    const [taskData, setTaskData] = useState('');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [clickedTask, setClickedTask] = useState('');
 
+    //populate data at each change/refresh
     const populateLanes = useCallback(() => {
+        //set initial value for the data for board
         setTaskData({
             lanes: [
                 {
@@ -34,11 +36,14 @@ const KanbanView = (props) => {
                 }
             ]
         });
-        if (props.tasks && taskData) {
+        console.log({tasks: taskData});
+        //check if there are tasks to map & then look up tasks
+        if (props.tasks) {
             const taskUrgencyArr = ['non urgent', 'low', 'normal', 'important', 'critical'];
             props.tasks.forEach(task => {
                 const correctLane = taskData.lanes?.find(lane => lane.id === task.status);
                 console.log({ lane: correctLane });
+                //map tasks into the cards array
                 if (correctLane && !correctLane.cards?.includes(card => card.id === task.id)) {
                     correctLane.cards?.push({
                         id: task._id,
@@ -53,42 +58,43 @@ const KanbanView = (props) => {
         }
     }, [props.tasks, taskData])
 
-
+    //populate data in the beginning
     useEffect(() => {
         populateLanes();
     }, [populateLanes]);
+    
+    //manage a change of the lanes
+    const handleChange = (cardId, sourceLandId, targetLaneId, position, cardDetail) => {
+        props.onEdit({ status: targetLaneId }, cardId);
+    }
+    //open a window with the task details
+    const handleClick = (cardId, metadata, laneId) => {
+        const card = props.tasks.filter(task => task._id === cardId)
+        setClickedTask(card);
+        console.log({ task: clickedTask });
+        onOpen();
+    }
 
-const handleChange = (cardId, sourceLandId, targetLaneId, position, cardDetail) => {
-    props.onEdit({ status: targetLaneId }, cardId);
-}
-
-const handleClick = (cardId, metadata, laneId) => {
-    const card = props.tasks.filter(task => task._id === cardId)
-    setClickedTask(card);
-    console.log({ task: clickedTask });
-    onOpen();
-}
-
-return (
-    <div>
-        {
-            typeof (taskData) === 'object' &&
-            <Board
-                data={taskData} handleDragEnd={handleChange} cardDraggable={true} onCardClick={handleClick}
-                style={{ backgroundColor: '#ffffff', paddingTop: '5%' }} cardStyle={{ borderRadius: '10px' }}
-            />
-        }
-        <ChakraProvider>
-            <TaskDetails isOpen={isOpen}
-                onOpen={onOpen}
-                onClose={onClose}
-                task={clickedTask}
-                onDelete={props.onDelete}
-                onEdit={props.onEdit}
-            />
-        </ChakraProvider>
-    </div>
-)
+    return (
+        <div>
+            {
+                typeof (taskData) === 'object' &&
+                <Board
+                    data={taskData} handleDragEnd={handleChange} cardDraggable={true} onCardClick={handleClick}
+                    style={{ backgroundColor: '#ffffff', paddingTop: '5%' }} cardStyle={{ borderRadius: '10px' }}
+                />
+            }
+            <ChakraProvider>
+                <TaskDetails isOpen={isOpen}
+                    onOpen={onOpen}
+                    onClose={onClose}
+                    task={clickedTask}
+                    onDelete={props.onDelete}
+                    onEdit={props.onEdit}
+                />
+            </ChakraProvider>
+        </div>
+    )
 }
 
 export default KanbanView;

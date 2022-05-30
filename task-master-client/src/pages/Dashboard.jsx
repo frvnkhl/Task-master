@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataService from "../services/DataService";
 import ViewChange from "../components/ViewChange";
-import { Divider, Text, Heading } from '@chakra-ui/react';
+import { Divider, Text, Heading, Spinner } from '@chakra-ui/react';
 import NewTaskForm from "../components/NewTaskForm";
 import TaskStats from "../components/TaskStats";
 import ListView from "../components/task-views/ListView";
@@ -64,7 +64,9 @@ const Dashboard = (props) => {
     const editTask = async (newTask, id) => {
         DataService.editTask(id, newTask, localStorage.getItem('JWT')).then(res => {
             setMessage({ text: 'Task edited successfully!', status: 'success' });
-            props.refresh();
+            setTimeout(() => {
+                props.refresh();
+            }, 2500);
         }).catch(err => {
             setMessage({
                 text: 'Something went wrong',
@@ -90,11 +92,11 @@ const Dashboard = (props) => {
 
     const renderView = () => {
         if (view === 'list') {
-            return (<ListView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
+            return (<ListView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} loading={props.loading} setLoading={props.setLoading} />);
         } else if (view === 'calendar') {
-            return (<CalendarView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
+            return (<CalendarView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} loading={props.loading} setLoading={props.setLoading} />);
         } else {
-            return (<KanbanView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} />);
+            return (<KanbanView tasks={user.tasks} onEdit={editTask} onDelete={deleteTask} refresh={props.refresh} loading={props.loading} setLoading={props.setLoading} />);
         }
     }
 
@@ -103,8 +105,8 @@ const Dashboard = (props) => {
             <Heading as='h1' size='xl' className="text-center md:mt-10 md:mb-5 sm:m-3">Dashboard of {user.username}</Heading>
             <Heading as='h2' size='lg' className="text-center md:m-7 sm:m-3">Today is {getCurrentDate()}</Heading>
             <div className="grid-cols-2 grid-rows-1 md:flex sm:grid-cols-1">
-                <div className="lg:w-1/5 md:w-1/4 sm:w-full">
-                    <Divider orientation='vertical' className="float-right w-3" />
+                <div className="lg:w-1/5 md:w-1/4 sm:w-full ">
+                    <Divider orientation='vertical' className="float-right w-1" />
                     <ViewChange view={view} changeView={setView} />
                     <NewTaskForm message={message} onAdd={addTask} />
                 </div>
@@ -113,12 +115,13 @@ const Dashboard = (props) => {
                 </div>
             </div>
             <div className="w-full">
-                {user.tasks.length === 0 ?
-                    <Text fontSize='4xl' className="text-center my-10">No tasks to show. Add some tasks!</Text> :
-                    <div>
-                        {renderView()}
-                    </div>
-                    }
+                {
+                    user.tasks.length === 0 ?
+                        <Text fontSize='4xl' className="text-center my-10">No tasks to show. Add some tasks!</Text> :
+                        <div>
+                            {renderView()}
+                        </div>
+                }
             </div>
         </div>
     )

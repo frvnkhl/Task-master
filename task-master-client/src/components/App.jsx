@@ -1,40 +1,51 @@
 import React from "react";
 import Navbar from "./Navbar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Dashboard from '../pages/Dashboard';
 import Home from '../pages/Home';
 import DataService from "../services/DataService";
 import queryString from 'query-string';
 import { useLocation, useNavigate } from 'react-router';
 import jwt_decode from 'jwt-decode';
+import { Spinner } from '@chakra-ui/react'
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState();
     const [user, setUser] = useState();
+    const [loading, setLoading] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
     //Check the JWT token for authorisation
-    useEffect(() => {
-        const componentWillMount = () => {
-            //Check if token was passed from 3rd party login
-            const value = queryString.parse(location.search);
-            if (value.token) {
-                localStorage.setItem('JWT', value.token);
-                navigate('/');
-            }
-            let accessToken = localStorage.getItem('JWT');
-            if (accessToken === null || !isTokenValid(accessToken)) {
-                setIsLoggedIn(false);
-            } else {
-                setIsLoggedIn(true);
-                DataService.getAllTasks(accessToken).then(res => {
-                    setUser(res.user);
-                })
-            }
+    const checkIfLoggedIn = useCallback(() => {
+        //Check if token was passed from 3rd party login
+        setLoading(true);
+        const value = queryString.parse(location.search);
+        if (value.token) {
+            localStorage.setItem('JWT', value.token);
+            setLoading(false);
+            navigate('/');
         }
-        componentWillMount()
-    }, )
+        //If not passed from the url, it will search for token in the local storage
+        let accessToken = localStorage.getItem('JWT');
+        if (accessToken === null || !isTokenValid(accessToken)) {
+            setTimeout(() => setLoading(false), 2000);
+            setIsLoggedIn(false);
+        } else {
+            setIsLoggedIn(true);
+            DataService.getAllTasks(accessToken).then(res => {
+                setUser(res.user);
+            })
+            setTimeout(() => setLoading(false), 2000);
+        }
+    },
+        [location, navigate],
+    )
+
+    //Check the JWT token for authorisation in the first render
+    useEffect(() => {
+        checkIfLoggedIn();
+    }, [checkIfLoggedIn])
 
     //Check validity of JWT
     const isTokenValid = (token) => {
@@ -52,7 +63,15 @@ const App = () => {
     return (
         <div>
             <Navbar isLoggedIn={isLoggedIn} />
-            {isLoggedIn ? <Dashboard isLoggedIn={isLoggedIn} refresh={reload} user={user} changeLoginStatus={setIsLoggedIn} /> : <Home isLoggedIn={isLoggedIn} refresh={reload} />}
+            {
+                loading ?
+                    <div className="grid align-center place-content-center mt-20">
+                        <Spinner size='xl' color='teal' />
+                    </div> :
+                    isLoggedIn ? <Dashboard isLoggedIn={isLoggedIn} refresh={reload} user={user} changeLoginStatus={setIsLoggedIn} loading={loading} setLoading={setLoading} /> :
+                        <Home isLoggedIn={isLoggedIn} refresh={reload} loading={loading} setLoading={setLoading} />
+
+            }
         </div>
     )
 }

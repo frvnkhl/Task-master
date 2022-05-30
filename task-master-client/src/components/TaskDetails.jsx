@@ -17,6 +17,7 @@ const TaskDetails = (props) => {
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
     const taskUrgencyArr = ['non urgent', 'low', 'normal', 'important', 'critical'];
 
+    //Formats date into a user-friendly format
     const formatDate = (date) => {
         return new Date(date).toLocaleDateString('en-GB', {
             weekday: "long",
@@ -26,6 +27,7 @@ const TaskDetails = (props) => {
         });
     }
 
+    //Handles deletion of a task
     const handleDelete = () => {
         props.onDelete(props.task.id);
     }
@@ -49,9 +51,6 @@ const TaskDetails = (props) => {
                         }
                     </ModalBody>
                     <ModalFooter>
-                        {/* <Button colorScheme='purple' mr={3} onClick={onInfoClose}>
-                            Close
-                        </Button> */}
                         <IconButton colorScheme='red' mr={3} onClick={handleDelete} icon={<DeleteIcon />} />
                         <IconButton colorScheme='teal' onClick={onEditOpen} icon={<EditIcon />} />
                         {

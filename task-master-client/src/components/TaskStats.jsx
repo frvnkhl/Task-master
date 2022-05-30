@@ -12,7 +12,7 @@ const TaskStats = (props) => {
         <div className="p-5 place-content-center">
             <StatGroup bg='aliceBlue' className="p-5 text-center rounded-lg drop-shadow-lg">
                 <Stat>
-                    <StatLabel>Tasks</StatLabel>
+                    <StatLabel>All of your Tasks</StatLabel>
                     <StatNumber>{props.tasks.length}</StatNumber>
                 </Stat>
                 <Stat>

@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridWeek from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
-import { useDisclosure } from "@chakra-ui/react";
+import { useDisclosure, Spinner } from "@chakra-ui/react";
 import TaskDetails from "../TaskDetails";
 
 const CalendarView = (props) => {
@@ -11,6 +11,7 @@ const CalendarView = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedTask, setSelectedTask] = useState('');
 
+    //map data to calendar
     useEffect(() => {
         const mappedEvents = [];
         props.tasks.forEach(task => {
@@ -29,9 +30,9 @@ const CalendarView = (props) => {
             })
         })
         setCalendarEvents(mappedEvents);
+    }, [props]);
 
-    }, [props.tasks]);
-
+    //set task background colour based on its status
     const setBackgroundColour = (status) => {
         switch (status) {
             case 'new':
@@ -47,6 +48,7 @@ const CalendarView = (props) => {
         }
     }
 
+    //open a window with task details
     const showTaskDetails = (eventClick) => {
         onOpen();
         const requestedTask = props.tasks.filter(task => task._id === eventClick.event.id);
@@ -54,6 +56,7 @@ const CalendarView = (props) => {
         console.log(requestedTask);
     }
 
+    //handle change on the calendar between dates
     const handleChange = (eventClick) => {
         const taskId = eventClick.event.id;
         const taskNewDate = {
@@ -64,11 +67,11 @@ const CalendarView = (props) => {
     }
 
     return (
-        <div className="m-5">
-            <div className="full-cal">
+        <div className="md:m-5">
+            <div className="full-cal sm:w-full">
                 <FullCalendar
                     headerToolbar={{
-                        left: "prev,next today",
+                        left: "prev,next",
                         center: "title",
                         right: "dayGridMonth,timeGridWeek"
                     }}
@@ -83,6 +86,7 @@ const CalendarView = (props) => {
                     eventDrop={handleChange}
                 />
             </div>
+
             <TaskDetails isOpen={isOpen}
                 onOpen={onOpen}
                 onClose={onClose}

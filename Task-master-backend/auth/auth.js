@@ -42,6 +42,8 @@ passport.use('register', new LocalStrategy({
         }
     }
 ));
+
+//passport strategy using username and password
 passport.use('login', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
@@ -98,10 +100,12 @@ passport.deserializeUser((id, done) => {
         done(err, user);
     });
 });
+
+//passport strategy using Google
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:6299/auth/google/task-master",
+    callbackURL: "/auth/google/task-master",
     proxy: true
 },
     (_accessToken, _refreshToken, profile, cb) => {
@@ -112,10 +116,12 @@ passport.use(new GoogleStrategy({
         });
     }
 ));
+
+//passport strategy using Facebook
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:6299/auth/facebook/callback",
+    callbackURL: "/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'email'],
     proxy: true
 },
