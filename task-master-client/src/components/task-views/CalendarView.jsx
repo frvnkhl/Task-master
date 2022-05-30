@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridWeek from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
-import { useDisclosure, Spinner } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import TaskDetails from "../TaskDetails";
 
 const CalendarView = (props) => {

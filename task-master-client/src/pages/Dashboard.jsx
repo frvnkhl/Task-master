@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataService from "../services/DataService";
 import ViewChange from "../components/ViewChange";
-import { Divider, Text, Heading, Spinner } from '@chakra-ui/react';
+import { Divider, Text, Heading } from '@chakra-ui/react';
 import NewTaskForm from "../components/NewTaskForm";
 import TaskStats from "../components/TaskStats";
 import ListView from "../components/task-views/ListView";
@@ -49,9 +49,7 @@ const Dashboard = (props) => {
     const addTask = async (newTask) => {
         DataService.createNewTask(newTask, localStorage.getItem('JWT')).then(res => {
             setMessage({ text: 'Task added successfully!', status: 'success' });
-            setTimeout(() => {
-                props.refresh();
-            }, 1000);
+            props.refresh();
         }).catch(err => {
             setMessage({
                 text: 'Something went wrong',
@@ -64,9 +62,7 @@ const Dashboard = (props) => {
     const editTask = async (newTask, id) => {
         DataService.editTask(id, newTask, localStorage.getItem('JWT')).then(res => {
             setMessage({ text: 'Task edited successfully!', status: 'success' });
-            setTimeout(() => {
-                props.refresh();
-            }, 2500);
+            props.refresh();
         }).catch(err => {
             setMessage({
                 text: 'Something went wrong',
