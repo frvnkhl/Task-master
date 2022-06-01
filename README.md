@@ -51,3 +51,11 @@ If you want to try the tasks, you need to register (you can use fake email and e
 - react-router
 - react-trello
 
+## Credits
+Although I made my app, there were many people around the internet with amazing tutorials that have helped me once I was stuck. For this reason, I decided to mention all the helpful resources that helped this app to exist.
+
+- When trying to link my api to my client app, I found out my original method wasn't optimal. Therefore I had to redo my strategies and it was pain. However [this blog by Paige Niedringhaus](https://medium.com/itnext/implementing-json-web-tokens-passport-js-in-a-javascript-application-with-react-b86b1f313436) saved my life! I implemented her strategies, tweaked it to fit in well with my app and the solution was more than optimal!
+
+- Since I really wanted a challenge and implement calendar view in my app, I realised there's no need to reinvent the wheel. I found out there are many third party components for react that can be well optimised for my use. I used [FullCalendar js event calendar](https://github.com/fullcalendar/fullcalendar). It integrated well with my task models, documentation is great, only downside is that to style it more, you have to add bootstrap to your app.
+
+- For kanban board view of my tasks I used [React Trello component](https://github.com/rcdexta/react-trello). It has solid documentation and it styles very well. Simple enough to implement and it offers a rich variety of customisation.
