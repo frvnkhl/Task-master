@@ -44,12 +44,12 @@ const LoginForm = (props) => {
 
     //Handle login via Google
     const handleGoogleLogin = async () => {
-        window.open('https://task-master-server.herokuapp.com/auth/google', '_self');
+        window.open('https://task-master-api.onrender.com/auth/google', '_self');
     }
 
     //Handle login via Facebook
     const handleFacebookLogin = async () => {
-        window.open('https://task-master-server.herokuapp.com/auth/facebook', '_self');
+        window.open('https://task-master-api.onrender.com/auth/facebook', '_self');
     }
 
     return (

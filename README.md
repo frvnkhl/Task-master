@@ -3,7 +3,7 @@
 ## Project description
 Task master is my first full-stack project that includes technologies such as authentication via 3rd party (google & facebook), implementing JWT, rendering data from the database, editing it on the frontend and reflect those changes on the backend. I played around with my client side, to make the tasks be shown in different ways as a list, kanban board and calendar. This showed me the world of different React 3rd party component and how to debug if things don't work together well.
 
-This app is very special for me, even though I already knew how to do all those things, I never did them together. Building this app was a great learning experience, since I aspire to be a full-stack developer and getting things work together is quite a challenge for the first time. I used MERN stack. For my backend I used Node.js, Express and MongoDB. I made frontend using React. The backend of my app is deployed on Heroku servers, frontend is hosted on firebase.
+This app is very special for me, even though I already knew how to do all those things, I never did them together. Building this app was a great learning experience, since I aspire to be a full-stack developer and getting things work together is quite a challenge for the first time. I used MERN stack. For my backend I used Node.js, Express and MongoDB. I made frontend using React. The backend of my app is deployed on Render servers, frontend is hosted on firebase.
 
 ### Main features
 - Register to the app with username & password

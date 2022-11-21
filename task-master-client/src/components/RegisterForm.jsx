@@ -49,12 +49,12 @@ const RegisterForm = () => {
 
     //handle Google register
     const handleGoogleSignUp = async () => {
-        window.open('https://task-master-server.herokuapp.com/auth/google', '_self');
+        window.open('https://task-master-api.onrender.com/auth/google', '_self');
     }
 
     //handle Facebook register
     const handleFacebookSignUp = async () => {
-        window.open('https://task-master-server.herokuapp.com/auth/facebook', '_self');
+        window.open('https://task-master-api.onrender.com/auth/facebook', '_self');
     }
 
     return (
